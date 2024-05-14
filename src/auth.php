@@ -5,17 +5,33 @@ require_once 'config.php';
 function registerUser($username, $email, $password)
 {
   global $pdo;
-  $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-  $sql = "INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)";
 
+  // Check if username or email is already in use
   try {
-    $stmt = $pdo->prepare($sql);
+    $stmt = $pdo->prepare("SELECT * FROM Users WHERE username = ? OR email = ?");
+    $stmt->execute([$username, $email]);
+    $user = $stmt->fetch();
+
+    if ($user) {
+      if ($user['username'] == $username) {
+        return "Username is already in use.";
+      }
+      if ($user['email'] == $email) {
+        return "Email is already in use.";
+      }
+    }
+
+    // If username and email are not in use, create the new user
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $stmt = $pdo->prepare("INSERT INTO Users (username, email, password) VALUES (?, ?, ?)");
     $stmt->execute([$username, $email, $hashed_password]);
-    return true;
+
+    return "User registered successfully.";
   } catch (PDOException $e) {
-    return false;
+    return "Error: " . $e->getMessage();
   }
 }
+
 
 // Function to verify user login
 function verifyUser($username, $password)

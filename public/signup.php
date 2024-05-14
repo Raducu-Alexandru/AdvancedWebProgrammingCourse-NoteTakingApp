@@ -7,23 +7,36 @@ $message = ''; // Message to display to the user
 
 // Check if the form has been submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  // Sanitize and validate user input
-  $username = sanitizeInput($_POST['username']);
-  $email = sanitizeInput($_POST['email']);
-  $password = sanitizeInput($_POST['password']);
-
-  // Simple validation
-  if (empty($username) || empty($email) || empty($password)) {
-    $message = 'All fields are required!';
+  // Validate username
+  if (empty(trim($_POST["username"]))) {
+    $username_err = "Please enter a username.";
   } else {
-    // Attempt to register the user
-    $registration_success = registerUser($username, $email, $password);
-    if ($registration_success) {
-      $message = 'Registration successful!';
-      header('Location: login.php'); // Redirect to login page after successful registration
+    $username = sanitizeInput($_POST["username"]);
+  }
+
+  // Validate email
+  if (empty(trim($_POST["email"]))) {
+    $email_err = "Please enter an email.";
+  } else {
+    $email = sanitizeInput($_POST["email"]);
+  }
+
+  // Validate password
+  if (empty(trim($_POST["password"]))) {
+    $password_err = "Please enter a password.";
+  } else {
+    $password = sanitizeInput($_POST["password"]);
+  }
+
+  // Check input errors before inserting in database
+  if (empty($username_err) && empty($email_err) && empty($password_err)) {
+    $register_result = registerUser($username, $email, $password);
+
+    if ($register_result == "User registered successfully.") {
+      header("location: login.php");
       exit;
     } else {
-      $message = 'Registration failed! User might already exist.';
+      $register_err = $register_result;
     }
   }
 }

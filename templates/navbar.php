@@ -1,10 +1,11 @@
 <link rel="stylesheet" href="css/navbar.css">
 <nav>
   <div class="navbar">
-    <button><a href="dashboard.php">Dashboard</a></button>
-    <button><a href="new_note.php">New Note</a></button>
-    <button><a href="manage_categories.php">Categories</a></button>
-    <button><a href="manage_tags.php">Tags</a></button>
-    <button><a href="logout.php">Logout</a></button>
+    <a href="dashboard.php"><button>Dashboard</button></a>
+    <a href="new_note.php"><button>New Note</button></a>
+    <a href="manage_categories.php"><button>Categories</button></a>
+    <a href="manage_tags.php"><button>Tags</button></a>
+    <a href="settings.php"><button>Settings</button></a>
+    <a href="logout.php"><button>Logout</button></a>
   </div>
 </nav>
